@@ -57,6 +57,20 @@ export default function Main_Content() {
       >
         redo
       </button>
+      <form action='/api/export-inventory' method='POST'>
+        <input
+          type='hidden'
+          name='items'
+          value={JSON.stringify(currentInventory)}
+        />
+        <button
+          className='px-4 py-2'
+          type='submit'
+          disabled={currentInventory.length === 0}
+        >
+          Export Pdf
+        </button>
+      </form>
     </div>
   );
 }
