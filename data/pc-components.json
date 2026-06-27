@@ -1,42 +1,188 @@
 [
   {
-    "id": "cpu-1",
-    "name": "Intel Core i5",
-    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/5fe3c9cc8cbaaa4aa52aed7389d2cc10.1600.jpg",
-    "price": 250,
-    "category": "CPU",
-    "incompatibleWith": ["mobo-2"]
-  },
-  {
-    "id": "cpu-2",
-    "name": "AMD Ryzen 5",
-    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/8a0df381931efb7323f458cfc42260f8.1600.jpg",
-    "price": 220,
-    "category": "CPU",
-    "incompatibleWith": ["mobo-1"]
-  },
-  {
-    "id": "mobo-1",
-    "name": "Intel Motherboard",
-    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/ff4b4e2c7f72b014f39f1864b19e7250.1600.jpg",
+    "id": "cpu-intel-12400f",
+    "name": "Intel Core i5-12400F",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/5fe3c9cc8cbaaa4aa52aed7389d2cc10.256p.jpg",
     "price": 150,
-    "category": "Motherboard",
-    "incompatibleWith": ["cpu-2"]
+    "category": "CPU",
+    "incompatibleWith": ["mobo-am4-b550", "mobo-am5-b650"]
   },
   {
-    "id": "mobo-2",
-    "name": "AMD Motherboard",
-    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/233f7973b2f73df3b3273091792a871d.1600.jpg",
-    "price": 140,
-    "category": "Motherboard",
-    "incompatibleWith": ["cpu-1"]
+    "id": "cpu-amd-5600",
+    "name": "AMD Ryzen 5 5600",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/8a0df381931efb7323f458cfc42260f8.256p.jpg",
+    "price": 130,
+    "category": "CPU",
+    "incompatibleWith": ["mobo-intel-b660", "mobo-am5-b650", "ram-ddr5-32"]
   },
   {
-    "id": "ram-1",
-    "name": "16GB DDR4 RAM",
-    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/982b9428595cdc64d19a034fcf0b7d3b.1600.jpg",
-    "price": 80,
+    "id": "cpu-amd-7600",
+    "name": "AMD Ryzen 5 7600",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/8a0df381931efb7323f458cfc42260f8.256p.jpg",
+    "price": 205,
+    "category": "CPU",
+    "incompatibleWith": [
+      "mobo-intel-b660",
+      "mobo-am4-b550",
+      "ram-ddr4-16",
+      "ram-ddr4-32"
+    ]
+  },
+  {
+    "id": "mobo-intel-b660",
+    "name": "ASUS PRIME B660M-A D4",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/ff4b4e2c7f72b014f39f1864b19e7250.256p.jpg",
+    "price": 145,
+    "category": "Motherboard",
+    "incompatibleWith": [
+      "cpu-amd-5600",
+      "cpu-amd-7600",
+      "ram-ddr5-32",
+      "case-corsair-2000d"
+    ]
+  },
+  {
+    "id": "mobo-am4-b550",
+    "name": "MSI B550M PRO-VDH WIFI",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/233f7973b2f73df3b3273091792a871d.256p.jpg",
+    "price": 120,
+    "category": "Motherboard",
+    "incompatibleWith": [
+      "cpu-intel-12400f",
+      "cpu-amd-7600",
+      "ram-ddr5-32",
+      "case-corsair-2000d"
+    ]
+  },
+  {
+    "id": "mobo-am5-b650",
+    "name": "Gigabyte B650 AORUS ELITE AX",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/233f7973b2f73df3b3273091792a871d.256p.jpg",
+    "price": 210,
+    "category": "Motherboard",
+    "incompatibleWith": [
+      "cpu-intel-12400f",
+      "cpu-amd-5600",
+      "ram-ddr4-16",
+      "ram-ddr4-32",
+      "case-corsair-2000d"
+    ]
+  },
+  {
+    "id": "ram-ddr4-16",
+    "name": "Corsair Vengeance LPX 16GB DDR4-3200",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/982b9428595cdc64d19a034fcf0b7d3b.256p.jpg",
+    "price": 45,
     "category": "RAM",
+    "incompatibleWith": ["mobo-am5-b650", "cpu-amd-7600"]
+  },
+  {
+    "id": "ram-ddr4-32",
+    "name": "Corsair Vengeance LPX 32GB DDR4-3200",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/982b9428595cdc64d19a034fcf0b7d3b.256p.jpg",
+    "price": 75,
+    "category": "RAM",
+    "incompatibleWith": ["mobo-am5-b650", "cpu-amd-7600"]
+  },
+  {
+    "id": "ram-ddr5-32",
+    "name": "G.Skill Trident Z5 Neo RGB 32GB DDR5-6000",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/982b9428595cdc64d19a034fcf0b7d3b.256p.jpg",
+    "price": 105,
+    "category": "RAM",
+    "incompatibleWith": ["mobo-intel-b660", "mobo-am4-b550", "cpu-amd-5600"]
+  },
+  {
+    "id": "gpu-rtx-4070",
+    "name": "NVIDIA Founders Edition RTX 4070 12GB",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/8258cfebf744bbf8e9d175944093d490.256p.jpg",
+    "price": 550,
+    "category": "GPU",
+    "incompatibleWith": ["psu-cx550", "case-corsair-2000d"]
+  },
+  {
+    "id": "gpu-rx-9060xt",
+    "name": "Gigabyte Radeon RX 9060 XT",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/867a636cde1c3c9762b06bde17acd022.256p.jpg",
+    "price": 420,
+    "category": "GPU",
+    "incompatibleWith": ["psu-cx550"]
+  },
+  {
+    "id": "gpu-rx-7600",
+    "name": "Sapphire PULSE Radeon RX 7600 8GB",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/867a636cde1c3c9762b06bde17acd022.256p.jpg",
+    "price": 270,
+    "category": "GPU",
+    "incompatibleWith": []
+  },
+  {
+    "id": "storage-adata-sx8200",
+    "name": "ADATA XPG SX8200 Pro 1TB NVMe SSD",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/fb831921149b546d44ee75f6bf282a4a.256p.jpg",
+    "price": 75,
+    "category": "Storage",
+    "incompatibleWith": []
+  },
+  {
+    "id": "storage-samsung-990",
+    "name": "Samsung 990 Pro 1TB NVMe SSD",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/a2988cd0655c6c7d2dedf7cd4b84bf70.256p.jpg",
+    "price": 219,
+    "category": "Storage",
+    "incompatibleWith": []
+  },
+  {
+    "id": "psu-cx550",
+    "name": "Corsair CXF 550W 80+ Bronze",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/fd4dd3c80698fbc02fbe7990598aec90.256p.jpg",
+    "price": 60,
+    "category": "PSU",
+    "incompatibleWith": ["gpu-rtx-4070", "gpu-rx-9060xt"]
+  },
+  {
+    "id": "psu-rm750e",
+    "name": "Corsair RM750e 750W 80+ Gold",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/1d6700ec8e0566c7f337a0dfbc3045dd.256p.jpg",
+    "price": 100,
+    "category": "PSU",
+    "incompatibleWith": []
+  },
+  {
+    "id": "case-corsair-2000d",
+    "name": "Corsair 2000D Airflow Mini-ITX",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/61cfb5b5d2424d4421388332616af695.256p.jpg",
+    "price": 120,
+    "category": "Case",
+    "incompatibleWith": [
+      "mobo-intel-b660",
+      "mobo-am4-b550",
+      "mobo-am5-b650",
+      "gpu-rtx-4070"
+    ]
+  },
+  {
+    "id": "case-corsair-4000d",
+    "name": "Corsair 4000D Airflow ATX Mid Tower",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/43dffde8ebf1330791a7443748af3853.256p.jpg",
+    "price": 95,
+    "category": "Case",
+    "incompatibleWith": []
+  },
+  {
+    "id": "cooler-peerless-assassin",
+    "name": "Thermalright Peerless Assassin 120 SE",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/1cc190ca3390c32f596e5c466270569f.256p.jpg",
+    "price": 40,
+    "category": "Cooler",
+    "incompatibleWith": ["case-corsair-2000d"]
+  },
+  {
+    "id": "cooler-sickleflow",
+    "name": "Cooler Master SickleFlow 120 ARGB 3-Pack",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/1cc190ca3390c32f596e5c466270569f.256p.jpg",
+    "price": 45,
+    "category": "Cooler",
     "incompatibleWith": []
   }
 ]
