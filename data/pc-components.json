@@ -1,0 +1,42 @@
+[
+  {
+    "id": "cpu-1",
+    "name": "Intel Core i5",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/5fe3c9cc8cbaaa4aa52aed7389d2cc10.1600.jpg",
+    "price": 250,
+    "category": "CPU",
+    "incompatibleWith": ["mobo-2"]
+  },
+  {
+    "id": "cpu-2",
+    "name": "AMD Ryzen 5",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/8a0df381931efb7323f458cfc42260f8.1600.jpg",
+    "price": 220,
+    "category": "CPU",
+    "incompatibleWith": ["mobo-1"]
+  },
+  {
+    "id": "mobo-1",
+    "name": "Intel Motherboard",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/ff4b4e2c7f72b014f39f1864b19e7250.1600.jpg",
+    "price": 150,
+    "category": "Motherboard",
+    "incompatibleWith": ["cpu-2"]
+  },
+  {
+    "id": "mobo-2",
+    "name": "AMD Motherboard",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/233f7973b2f73df3b3273091792a871d.1600.jpg",
+    "price": 140,
+    "category": "Motherboard",
+    "incompatibleWith": ["cpu-1"]
+  },
+  {
+    "id": "ram-1",
+    "name": "16GB DDR4 RAM",
+    "image": "https://cdna.pcpartpicker.com/static/forever/images/product/982b9428595cdc64d19a034fcf0b7d3b.1600.jpg",
+    "price": 80,
+    "category": "RAM",
+    "incompatibleWith": []
+  }
+]
