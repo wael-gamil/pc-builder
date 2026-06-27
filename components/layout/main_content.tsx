@@ -8,6 +8,7 @@ import {
   useInventoryDispatch,
 } from '../../lib/contexts/inventory-context';
 import { componentType } from '@/lib/types/component';
+import { currentBudget, isIncompatible } from '@/lib/utils/helpers';
 export default function Main_Content() {
   const dispatch = useInventoryDispatch();
   const state = useInventory();
@@ -16,7 +17,7 @@ export default function Main_Content() {
   const canUndo = activeIndex > 0;
   const canRedo = activeIndex < state.history.length - 1;
   return (
-    <div className='flex gap-2'>
+    <div className='flex flex-wrap gap-2'>
       {data.map((item: componentType, index) => {
         return (
           <Card
@@ -28,7 +29,9 @@ export default function Main_Content() {
               })
             }
             disabled={
-              currentInventory.findIndex(el => el.id === item.id) !== -1
+              currentInventory.findIndex(el => el.id === item.id) !== -1 ||
+              isIncompatible(item, currentInventory) ||
+              currentBudget(currentInventory).availableBalance < item.price
             }
             key={index}
           />

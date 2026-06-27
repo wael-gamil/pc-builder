@@ -8,6 +8,7 @@ import {
   useEffect,
 } from 'react';
 import { componentType } from '../types/component';
+import { currentBudget, isIncompatible } from '../utils/helpers';
 
 type historyAction = 'add' | 'delete';
 
@@ -53,7 +54,12 @@ function inventoryReducer(state: state, action: actionType): state {
       const alreadyExist = currentItems.some(
         item => item.id === action.item.id
       );
-      if (alreadyExist) return state;
+      if (
+        alreadyExist ||
+        isIncompatible(action.item, currentItems) ||
+        currentBudget(currentItems).availableBalance < action.item.price
+      )
+        return state;
       const newItems = [...currentItems, action.item];
       return createNewHistoryEntry(state, newItems, 'add');
     }
@@ -72,7 +78,6 @@ function inventoryReducer(state: state, action: actionType): state {
         })),
       };
     }
-
     case 'redo': {
       const activeIndex = getActiveIndex(state.history);
       if (activeIndex === -1 || activeIndex >= state.history.length - 1)
