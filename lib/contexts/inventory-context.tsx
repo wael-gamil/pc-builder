@@ -9,6 +9,19 @@ import {
 } from 'react';
 import { componentType } from '../types/component';
 
+type historyAction = 'add' | 'delete';
+
+type historyEntry = {
+  id: number;
+  items: componentType[];
+  isActive: boolean;
+  action?: historyAction;
+};
+
+type state = {
+  history: historyEntry[];
+};
+
 type actionType =
   | {
       type: 'add' | 'delete';
@@ -18,49 +31,81 @@ type actionType =
       type: 'undo' | 'redo';
     };
 
-const intialInventory: componentType[] = [];
+const initialHistoryState: state = {
+  history: [
+    {
+      id: 1,
+      items: [],
+      isActive: true,
+    },
+  ],
+};
 
-export const InventoryContext = createContext(intialInventory);
+export const InventoryContext = createContext<state>(initialHistoryState);
 export const InventoryDispatchContext = createContext<
   Dispatch<actionType> | undefined
 >(undefined);
 
-function inventoryReducer(
-  items: componentType[],
-  action: actionType
-): componentType[] {
-  let newItems = items;
+function inventoryReducer(state: state, action: actionType): state {
   switch (action.type) {
-    case 'add':
-      newItems = [...items, action.item];
-      return newItems;
-    case 'delete':
-      newItems = items.filter(el => el.id !== action.item.id);
-      return newItems;
-    case 'undo':
-    case 'redo':
+    case 'add': {
+      const currentItems = getActiveItems(state.history);
+      const alreadyExist = currentItems.some(
+        item => item.id === action.item.id
+      );
+      if (alreadyExist) return state;
+      const newItems = [...currentItems, action.item];
+      return createNewHistoryEntry(state, newItems, 'add');
+    }
+    case 'delete': {
+      const currentItems = getActiveItems(state.history);
+      const newItems = currentItems.filter(el => el.id !== action.item.id);
+      return createNewHistoryEntry(state, newItems, 'delete');
+    }
+    case 'undo': {
+      const activeIndex = getActiveIndex(state.history);
+      if (activeIndex <= 0) return state;
+      return {
+        history: state.history.map((entry, index) => ({
+          ...entry,
+          isActive: index === activeIndex - 1,
+        })),
+      };
+    }
+
+    case 'redo': {
+      const activeIndex = getActiveIndex(state.history);
+      if (activeIndex === -1 || activeIndex >= state.history.length - 1)
+        return state;
+      return {
+        history: state.history.map((entry, index) => ({
+          ...entry,
+          isActive: index === activeIndex + 1,
+        })),
+      };
+    }
     default:
-      return items;
+      return state;
   }
 }
 
 export function InventroyProvider({ children }: { children: ReactNode }) {
-  const [inventoryitems, dispatchInventoryItems] = useReducer(
+  const [state, dispatchInventoryItems] = useReducer(
     inventoryReducer,
-    intialInventory,
+    initialHistoryState,
     initialPresistedValue => {
       if (typeof window !== 'undefined') {
-        const stored = localStorage.getItem('inventoryItems');
+        const stored = localStorage.getItem('inventoryHistory');
         return stored ? JSON.parse(stored) : initialPresistedValue;
       }
       return initialPresistedValue;
     }
   );
   useEffect(() => {
-    localStorage.setItem('inventoryItems', JSON.stringify(inventoryitems));
-  }, [inventoryitems]);
+    localStorage.setItem('inventoryHistory', JSON.stringify(state));
+  }, [state]);
   return (
-    <InventoryContext value={inventoryitems}>
+    <InventoryContext value={state}>
       <InventoryDispatchContext value={dispatchInventoryItems}>
         {children}
       </InventoryDispatchContext>
@@ -80,4 +125,36 @@ export function useInventoryDispatch() {
     );
   }
   return context;
+}
+
+export function getActiveIndex(history: historyEntry[]) {
+  return history.findIndex(el => el.isActive);
+}
+
+export function getActiveItems(history: historyEntry[]) {
+  const activeIndex = getActiveIndex(history);
+  return activeIndex === -1 ? [] : history[activeIndex].items;
+}
+
+export function createNewHistoryEntry(
+  state: state,
+  newItems: componentType[],
+  action: historyAction
+): state {
+  const activeIndex = getActiveIndex(state.history);
+  const historyBeforeActive = state.history.slice(0, activeIndex + 1);
+  const inactiveHistory = historyBeforeActive.map(historyEntry => {
+    return {
+      ...historyEntry,
+      isActive: false,
+    };
+  });
+  const lastEntry = historyBeforeActive[historyBeforeActive.length - 1];
+  const newEntry: historyEntry = {
+    id: lastEntry.id + 1,
+    items: newItems,
+    isActive: true,
+    action,
+  };
+  return { history: [...inactiveHistory, newEntry] };
 }
