@@ -25,7 +25,7 @@ export default function Main_Content() {
                 item: item,
               })
             }
-            disabled={inventoryItems.findIndex(el => el === item) !== -1}
+            disabled={inventoryItems.findIndex(el => el.id === item.id) !== -1}
             key={index}
           />
         );

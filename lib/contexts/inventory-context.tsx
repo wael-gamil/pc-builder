@@ -5,16 +5,17 @@ import {
   ReactNode,
   useReducer,
   Dispatch,
+  useEffect,
 } from 'react';
 import { componentType } from '../types/component';
 
 type actionType =
   | {
-      type: 'add';
+      type: 'add' | 'delete';
       item: componentType;
     }
   | {
-      type: 'undo';
+      type: 'undo' | 'redo';
     };
 
 const intialInventory: componentType[] = [];
@@ -28,20 +29,36 @@ function inventoryReducer(
   items: componentType[],
   action: actionType
 ): componentType[] {
+  let newItems = items;
   switch (action.type) {
     case 'add':
-      return [...items, action.item];
+      newItems = [...items, action.item];
+      return newItems;
+    case 'delete':
+      newItems = items.filter(el => el.id !== action.item.id);
+      return newItems;
     case 'undo':
-      return items.slice(0, -1);
+    case 'redo':
     default:
       return items;
   }
 }
+
 export function InventroyProvider({ children }: { children: ReactNode }) {
   const [inventoryitems, dispatchInventoryItems] = useReducer(
     inventoryReducer,
-    intialInventory
+    intialInventory,
+    initialPresistedValue => {
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('inventoryItems');
+        return stored ? JSON.parse(stored) : initialPresistedValue;
+      }
+      return initialPresistedValue;
+    }
   );
+  useEffect(() => {
+    localStorage.setItem('inventoryItems', JSON.stringify(inventoryitems));
+  }, [inventoryitems]);
   return (
     <InventoryContext value={inventoryitems}>
       <InventoryDispatchContext value={dispatchInventoryItems}>
