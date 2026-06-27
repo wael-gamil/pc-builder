@@ -1,3 +1,5 @@
+import Main_Content from '@/components/layout/main_content';
+
 export default function Home() {
-  return <></>;
+  return <Main_Content />;
 }
