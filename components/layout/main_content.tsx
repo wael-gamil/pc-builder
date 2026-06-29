@@ -17,7 +17,7 @@ export default function Main_Content() {
   const canUndo = activeIndex > 0;
   const canRedo = activeIndex < state.history.length - 1;
   return (
-    <div className='flex flex-wrap gap-2'>
+    <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
       {data.map((item: componentType, index) => {
         return (
           <Card
