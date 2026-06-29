@@ -26,6 +26,7 @@ export default function Layout_Header() {
           onChange={toggleTheme}
           checkedChildren='Dark'
           unCheckedChildren='Light'
+          aria-label='Toggle theme'
         />
       </div>
 
@@ -68,6 +69,7 @@ export default function Layout_Header() {
             percent={budgetUsage}
             showInfo={false}
             status={budget.availableBalance < 0 ? 'exception' : 'normal'}
+            aria-label={`Budget used ${budgetUsage}%`}
           />
         </div>
       </div>

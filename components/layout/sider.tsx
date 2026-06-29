@@ -59,6 +59,7 @@ export default function Layout_Sider() {
             <Button
               danger
               variant='outlined'
+              aria-label={`Remove ${item.name}`}
               onClick={() =>
                 dispatch({
                   type: 'delete',

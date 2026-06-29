@@ -10,6 +10,7 @@ type cardProps = {
   onClick: () => void;
   disabled: boolean;
   selected: boolean;
+  disabledReason?: string;
 };
 
 export default function Card({
@@ -17,6 +18,7 @@ export default function Card({
   onClick,
   disabled,
   selected,
+  disabledReason,
 }: cardProps) {
   const { token } = theme.useToken();
 
@@ -25,7 +27,7 @@ export default function Card({
       className='h-full'
       styles={{
         body: {
-          height: 300,
+          height: 330,
           display: 'flex',
           flexDirection: 'column',
           padding: 16,
@@ -60,12 +62,30 @@ export default function Card({
 
       <p className='text-lg font-bold'>${component.price}</p>
 
+      {disabledReason && (
+        <p
+          className='text-xs'
+          style={{
+            color: selected ? token.colorSuccess : token.colorError,
+          }}
+        >
+          {disabledReason}
+        </p>
+      )}
+
       <Button
         type={selected ? 'default' : 'primary'}
         onClick={onClick}
         disabled={disabled}
+        aria-label={
+          selected
+            ? `${component.name} already added`
+            : disabled
+            ? `${component.name} unavailable. ${disabledReason}`
+            : `Add ${component.name}`
+        }
         block
-        icon={<BsCart3 />}
+        icon={<BsCart3 aria-hidden='true' />}
         className='mt-auto'
         style={
           selected

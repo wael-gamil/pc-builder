@@ -48,6 +48,7 @@ export default function Main_Content({
               <Button
                 key={category}
                 type={activeCategory === category ? 'primary' : 'default'}
+                aria-pressed={activeCategory === category}
                 onClick={() => setActiveCategory(category)}
               >
                 {category}
@@ -97,9 +98,27 @@ export default function Main_Content({
           const selected =
             currentInventory.findIndex(el => el.id === item.id) !== -1;
 
+          const alreadyHasCategory = currentInventory.some(
+            selectedItem => selectedItem.category === item.category
+          );
+
+          const incompatible = isIncompatible(item, currentInventory);
+          const overBudget = budget.availableBalance < item.price;
+
           const blocked =
-            isIncompatible(item, currentInventory) ||
-            budget.availableBalance < item.price;
+            !selected && (alreadyHasCategory || incompatible || overBudget);
+
+          let disabledReason = '';
+
+          if (selected) {
+            disabledReason = 'Already added';
+          } else if (alreadyHasCategory) {
+            disabledReason = `Only one ${item.category} can be selected`;
+          } else if (incompatible) {
+            disabledReason = 'Not compatible with your current build';
+          } else if (overBudget) {
+            disabledReason = 'Exceeds the remaining budget';
+          }
 
           return (
             <Card
@@ -112,6 +131,7 @@ export default function Main_Content({
               }
               disabled={selected || blocked}
               selected={selected}
+              disabledReason={disabledReason}
               key={item.id}
             />
           );

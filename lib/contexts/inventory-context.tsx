@@ -63,8 +63,12 @@ function inventoryReducer(state: state, action: actionType): state {
       const alreadyExist = currentItems.some(
         item => item.id === action.item.id
       );
+      const alreadyHasCategory = currentItems.some(
+        item => item.category === action.item.category
+      );
       if (
         alreadyExist ||
+        alreadyHasCategory ||
         isIncompatible(action.item, currentItems) ||
         currentBudget(currentItems).availableBalance < action.item.price
       )

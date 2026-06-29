@@ -86,7 +86,12 @@ export default function Mobile_Controls({
             </span>
           </div>
 
-          <Progress percent={percent} showInfo={false} size='small' />
+          <Progress
+            percent={percent}
+            showInfo={false}
+            size='small'
+            aria-label={`Budget used ${percent}%`}
+          />
         </div>
       </div>
 
