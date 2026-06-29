@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PC Builder
 
-## Getting Started
+A small PC bundle builder where users can choose components, track the total budget, and avoid incompatible parts.
 
-First, run the development server:
+## Tech Stack
+
+* Next.js
+* React
+* TypeScript
+* Ant Design
+* Context API + reducer
+
+## How to Run
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open the app:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Undo / Redo Logic
 
-## Learn More
+The Logic is built based on the history state that hold the whole timeline the user made and having a key isActive indicating the current inventory 
 
-To learn more about Next.js, take a look at the following resources:
+The key used as pointer so the undo go backward a step and the redo go forth a step 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Everytime the user adds or removes an item there's a new history entry created that contain the selected items at that point
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## PDF Export Logic
 
-## Deploy on Vercel
+The PDF export uses a Next.js API route
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The selected build items are sent to the route then the PDF is generated on the server using `@react-pdf/renderer`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+I used Next.js here because it gives more flexibility for server-side features like setting response headers. For the PDF download, the route returns the generated PDF with:
+
+```ts
+Content-Disposition: attachment
+```
+
+This makes the browser download the file instead of opening it as normal page content.
+
+## Project Structure
+
+```bash
+app/
+  api/
+    export-inventory/
+      route.ts
+  favicon.ico
+  globals.css
+  layout.tsx
+  page.tsx
+
+components/
+  global/
+    card.tsx
+  layout/
+    header.tsx
+    main_content.tsx
+    mobile_controls.tsx
+    sider.tsx
+
+lib/
+  constants/
+    constants.ts
+  contexts/
+    inventory-context.tsx
+  pdf/
+    inventory-pdf.tsx
+  theme/
+    tokens.ts
+  types/
+    component.ts
+  utils/
+    helpers.ts
+
+data/
+  pc-components.json
+```
+
+## Resources
+
+* https://ant.design/components/layout#interaction-rules
+* https://nextjs.org/docs/pages/getting-started/fonts
+* https://react.dev/reference/react/createContext
+* https://react.dev/learn/passing-data-deeply-with-context
+* https://react.dev/reference/react/useContext#updating-data-passed-via-context
+* https://react.dev/learn/extracting-state-logic-into-a-reducer
+* https://react.dev/learn/scaling-up-with-reducer-and-context
+* https://stevekinney.com/courses/react-typescript/passing-dispatch-and-context
+* https://ant.design/docs/react/use-with-next
+* https://ant.design/docs/react/customize-theme/
