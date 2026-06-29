@@ -1,23 +1,31 @@
 'use client';
 
-import { Button, Tag, theme } from 'antd';
+import { Button, Card as AntdCard, Tag, theme } from 'antd';
 import { componentType } from '../../lib/types/component';
 import Image from 'next/image';
-import { Card as AntdCard } from 'antd';
 import { BsCart3 } from 'react-icons/bs';
 
 type cardProps = {
   component: componentType;
   onClick: () => void;
   disabled: boolean;
+  selected: boolean;
 };
-export default function Card({ component, onClick, disabled }: cardProps) {
+
+export default function Card({
+  component,
+  onClick,
+  disabled,
+  selected,
+}: cardProps) {
   const { token } = theme.useToken();
 
   return (
     <AntdCard
+      className='h-full'
       styles={{
         body: {
+          height: 300,
           display: 'flex',
           flexDirection: 'column',
           padding: 16,
@@ -25,40 +33,52 @@ export default function Card({ component, onClick, disabled }: cardProps) {
         },
       }}
     >
-      <div className='flex justify-center'>
+      <div className='mb-4 flex h-[90px] items-center justify-center'>
         <Image
           src={component.image}
           width={120}
           height={90}
           alt={`image of ${component.name}`}
-          className='object-contain'
+          className='max-h-[90px] w-auto object-contain'
         />
       </div>
 
-      <div className='flex flex-1 flex-col gap-2'>
-        <h3 className='text-xl font-semibold leading-5'>{component.name}</h3>
+      <h3 className='line-clamp-2 text-sm font-semibold leading-5'>
+        {component.name}
+      </h3>
 
-        <Tag
-          style={{
-            color: token.colorTextSecondary,
-            background: token.colorPrimaryBg,
-            borderColor: token.colorPrimaryBorder,
-          }}
-          className='w-fit'
-        >
-          {component.category}
-        </Tag>
+      <Tag
+        className='mb-3 w-fit'
+        style={{
+          color: token.colorPrimary,
+          background: token.colorPrimaryBg,
+          borderColor: token.colorPrimaryBorder,
+        }}
+      >
+        {component.category}
+      </Tag>
 
-        <p className='text-lg font-bold'>${component.price}</p>
-      </div>
+      <p className='text-lg font-bold'>${component.price}</p>
 
       <Button
-        type={disabled ? 'default' : 'primary'}
+        type={selected ? 'default' : 'primary'}
         onClick={onClick}
         disabled={disabled}
+        block
         icon={<BsCart3 />}
+        className='mt-auto'
+        style={
+          selected
+            ? {
+                color: token.colorSuccess,
+                background: token.colorSuccessBg,
+                borderColor: token.colorSuccessBorder,
+                opacity: 1,
+              }
+            : undefined
+        }
       >
-        {disabled ? 'Added' : 'Add'}
+        {selected ? 'Added' : disabled ? 'Unavailable' : 'Add'}
       </Button>
     </AntdCard>
   );

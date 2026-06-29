@@ -12,12 +12,14 @@ export const getAppTheme = (mode: 'light' | 'dark'): ThemeConfig => ({
     borderRadius: 10,
     fontFamily: 'Cairo, Inter, Arial, sans-serif',
 
-    colorBgLayout: mode === 'dark' ? '#0f172a' : '#fff',
-    colorBgContainer: mode === 'dark' ? '#111827' : '#fff',
-    colorBorder: mode === 'dark' ? '#263241' : '#fff',
+    colorBgLayout: mode === 'dark' ? '#0f172a' : '#f6f8fb',
+    colorBgContainer: mode === 'dark' ? '#111827' : '#ffffff',
 
-    colorText: mode === 'dark' ? '#fff' : '#111827',
-    colorTextSecondary: mode === 'dark' ? '#fff' : '#2881fd',
+    colorBorder: mode === 'dark' ? '#263241' : '#e5e7eb',
+    colorBorderSecondary: mode === 'dark' ? '#1f2937' : '#edf0f5',
+
+    colorText: mode === 'dark' ? '#ffffff' : '#111827',
+    colorTextSecondary: mode === 'dark' ? '#cbd5e1' : '#64748b',
   },
 
   components: {
@@ -33,6 +35,21 @@ export const getAppTheme = (mode: 'light' | 'dark'): ThemeConfig => ({
 
     Tag: {
       borderRadiusSM: 6,
+    },
+
+    Progress: {
+      defaultColor: '#2881fd',
+      remainingColor: mode === 'dark' ? '#263241' : '#e5e7eb',
+    },
+
+    Layout: {
+      bodyBg: mode === 'dark' ? '#0f172a' : '#f6f8fb',
+      headerBg: mode === 'dark' ? '#0f172a' : '#f6f8fb',
+      siderBg: mode === 'dark' ? '#0f172a' : '#f6f8fb',
+    },
+
+    Drawer: {
+      colorBgElevated: mode === 'dark' ? '#111827' : '#ffffff',
     },
   },
 });

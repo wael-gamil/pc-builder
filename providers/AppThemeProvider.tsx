@@ -1,10 +1,17 @@
 'use client';
 
-import { ConfigProvider, Switch } from 'antd';
-import { ReactNode, useMemo, useState } from 'react';
+import { ConfigProvider } from 'antd';
+import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
 import { getAppTheme } from '@/lib/theme/tokens';
 
 type ThemeMode = 'light' | 'dark';
+
+type ThemeContextType = {
+  mode: ThemeMode;
+  toggleTheme: (checked: boolean) => void;
+};
+
+const ThemeModeContext = createContext<ThemeContextType | undefined>(undefined);
 
 function getInitialThemeMode(): ThemeMode {
   if (typeof window === 'undefined') {
@@ -29,7 +36,7 @@ export default function AppThemeProvider({
 
   const themeConfig = useMemo(() => getAppTheme(mode), [mode]);
 
-  function handleThemeChange(checked: boolean) {
+  function toggleTheme(checked: boolean) {
     const nextMode = checked ? 'dark' : 'light';
 
     setMode(nextMode);
@@ -37,22 +44,27 @@ export default function AppThemeProvider({
   }
 
   return (
-    <ConfigProvider theme={themeConfig}>
-      <div
-        style={{
-          minHeight: '100vh',
-          background: mode === 'dark' ? '#0f172a' : '#fff',
-        }}
-      >
-        <Switch
-          checked={mode === 'dark'}
-          onChange={handleThemeChange}
-          checkedChildren='Dark'
-          unCheckedChildren='Light'
-        />
-
-        {children}
-      </div>
-    </ConfigProvider>
+    <ThemeModeContext.Provider value={{ mode, toggleTheme }}>
+      <ConfigProvider theme={themeConfig}>
+        <div
+          style={{
+            minHeight: '100vh',
+            background: mode === 'dark' ? '#0f172a' : '#f5f7fb',
+          }}
+        >
+          {children}
+        </div>
+      </ConfigProvider>
+    </ThemeModeContext.Provider>
   );
+}
+
+export function useAppTheme() {
+  const context = useContext(ThemeModeContext);
+
+  if (!context) {
+    throw new Error('useAppTheme must be used within AppThemeProvider');
+  }
+
+  return context;
 }

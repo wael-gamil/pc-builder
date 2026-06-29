@@ -1,4 +1,5 @@
 'use client';
+
 import data from '../../data/pc-components.json';
 import Card from '../global/card';
 import {
@@ -9,68 +10,113 @@ import {
 } from '../../lib/contexts/inventory-context';
 import { componentType } from '@/lib/types/component';
 import { currentBudget, isIncompatible } from '@/lib/utils/helpers';
-export default function Main_Content() {
+import { Button, Card as AntdCard } from 'antd';
+
+type mainContentProps = {
+  activeCategory: string;
+  setActiveCategory: (category: string) => void;
+  categories: string[];
+};
+
+export default function Main_Content({
+  activeCategory,
+  setActiveCategory,
+  categories,
+}: mainContentProps) {
   const dispatch = useInventoryDispatch();
   const state = useInventory();
+
   const currentInventory = getActiveItems(state.history);
   const activeIndex = getActiveIndex(state.history);
+
   const canUndo = activeIndex > 0;
   const canRedo = activeIndex < state.history.length - 1;
+
+  const budget = currentBudget(currentInventory);
+
+  const filteredData =
+    activeCategory === 'All'
+      ? data
+      : data.filter(item => item.category === activeCategory);
+
   return (
-    <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-      {data.map((item: componentType, index) => {
-        return (
-          <Card
-            component={item}
-            onClick={() =>
-              dispatch({
-                type: 'add',
-                item: item,
-              })
-            }
-            disabled={
-              currentInventory.findIndex(el => el.id === item.id) !== -1 ||
-              isIncompatible(item, currentInventory) ||
-              currentBudget(currentInventory).availableBalance < item.price
-            }
-            key={index}
-          />
-        );
-      })}
-      <button
-        onClick={() => {
-          dispatch({
-            type: 'undo',
-          });
-        }}
-        disabled={!canUndo}
-      >
-        undo
-      </button>
-      <button
-        onClick={() => {
-          dispatch({
-            type: 'redo',
-          });
-        }}
-        disabled={!canRedo}
-      >
-        redo
-      </button>
-      <form action='/api/export-inventory' method='POST'>
-        <input
-          type='hidden'
-          name='items'
-          value={JSON.stringify(currentInventory)}
-        />
-        <button
-          className='px-4 py-2'
-          type='submit'
-          disabled={currentInventory.length === 0}
-        >
-          Export Pdf
-        </button>
-      </form>
+    <div>
+      <AntdCard className='mb-4 hidden lg:block'>
+        <div className='flex flex-wrap items-center justify-between gap-3'>
+          <div className='flex flex-wrap gap-2'>
+            {categories.map(category => (
+              <Button
+                key={category}
+                type={activeCategory === category ? 'primary' : 'default'}
+                onClick={() => setActiveCategory(category)}
+              >
+                {category}
+              </Button>
+            ))}
+          </div>
+
+          <div className='flex flex-wrap gap-2'>
+            <Button
+              onClick={() => {
+                dispatch({ type: 'undo' });
+              }}
+              disabled={!canUndo}
+            >
+              Undo
+            </Button>
+
+            <Button
+              onClick={() => {
+                dispatch({ type: 'redo' });
+              }}
+              disabled={!canRedo}
+            >
+              Redo
+            </Button>
+
+            <form action='/api/export-inventory' method='POST'>
+              <input
+                type='hidden'
+                name='items'
+                value={JSON.stringify(currentInventory)}
+              />
+
+              <Button
+                htmlType='submit'
+                disabled={currentInventory.length === 0}
+              >
+                Export PDF
+              </Button>
+            </form>
+          </div>
+        </div>
+      </AntdCard>
+
+      <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 pt-2'>
+        {filteredData.map((item: componentType) => {
+          const selected =
+            currentInventory.findIndex(el => el.id === item.id) !== -1;
+
+          const blocked =
+            isIncompatible(item, currentInventory) ||
+            budget.availableBalance < item.price;
+
+          return (
+            <Card
+              component={item}
+              onClick={() =>
+                dispatch({
+                  type: 'add',
+                  item,
+                })
+              }
+              disabled={selected || blocked}
+              selected={selected}
+              key={item.id}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
