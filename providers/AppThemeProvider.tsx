@@ -3,8 +3,7 @@
 import { ConfigProvider } from 'antd';
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
 import { getAppTheme } from '@/lib/theme/tokens';
-
-type ThemeMode = 'light' | 'dark';
+import { ThemeMode } from '@/lib/types/component';
 
 type ThemeContextType = {
   mode: ThemeMode;
@@ -13,34 +12,23 @@ type ThemeContextType = {
 
 const ThemeModeContext = createContext<ThemeContextType | undefined>(undefined);
 
-function getInitialThemeMode(): ThemeMode {
-  if (typeof window === 'undefined') {
-    return 'light';
-  }
-
-  const storedTheme = localStorage.getItem('theme-mode');
-
-  if (storedTheme === 'dark' || storedTheme === 'light') {
-    return storedTheme;
-  }
-
-  return 'light';
-}
-
 export default function AppThemeProvider({
   children,
+  initialMode,
 }: {
   children: ReactNode;
+  initialMode: ThemeMode;
 }) {
-  const [mode, setMode] = useState<ThemeMode>(() => getInitialThemeMode());
+  const [mode, setMode] = useState<ThemeMode>(initialMode);
 
   const themeConfig = useMemo(() => getAppTheme(mode), [mode]);
 
   function toggleTheme(checked: boolean) {
-    const nextMode = checked ? 'dark' : 'light';
+    const nextMode: ThemeMode = checked ? 'dark' : 'light';
 
     setMode(nextMode);
-    localStorage.setItem('theme-mode', nextMode);
+
+    document.cookie = `theme-mode=${nextMode}; path=/; max-age=31536000; SameSite=Lax`;
   }
 
   return (

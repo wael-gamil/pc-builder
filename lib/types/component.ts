@@ -6,3 +6,5 @@ export type componentType = {
   category: string;
   incompatibleWith: string[];
 };
+
+export type ThemeMode = 'light' | 'dark';
