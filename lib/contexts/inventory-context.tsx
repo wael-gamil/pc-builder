@@ -21,6 +21,7 @@ type historyEntry = {
 
 type state = {
   history: historyEntry[];
+  isReady: boolean;
 };
 
 type actionType =
@@ -30,6 +31,10 @@ type actionType =
     }
   | {
       type: 'undo' | 'redo';
+    }
+  | {
+      type: 'hydrate';
+      state: state;
     };
 
 const initialHistoryState: state = {
@@ -40,6 +45,7 @@ const initialHistoryState: state = {
       isActive: true,
     },
   ],
+  isReady: false,
 };
 
 export const InventoryContext = createContext<state>(initialHistoryState);
@@ -49,6 +55,9 @@ export const InventoryDispatchContext = createContext<
 
 function inventoryReducer(state: state, action: actionType): state {
   switch (action.type) {
+    case 'hydrate': {
+      return action.state;
+    }
     case 'add': {
       const currentItems = getActiveItems(state.history);
       const alreadyExist = currentItems.some(
@@ -72,6 +81,7 @@ function inventoryReducer(state: state, action: actionType): state {
       const activeIndex = getActiveIndex(state.history);
       if (activeIndex <= 0) return state;
       return {
+        ...state,
         history: state.history.map((entry, index) => ({
           ...entry,
           isActive: index === activeIndex - 1,
@@ -83,6 +93,7 @@ function inventoryReducer(state: state, action: actionType): state {
       if (activeIndex === -1 || activeIndex >= state.history.length - 1)
         return state;
       return {
+        ...state,
         history: state.history.map((entry, index) => ({
           ...entry,
           isActive: index === activeIndex + 1,
@@ -97,17 +108,39 @@ function inventoryReducer(state: state, action: actionType): state {
 export function InventroyProvider({ children }: { children: ReactNode }) {
   const [state, dispatchInventoryItems] = useReducer(
     inventoryReducer,
-    initialHistoryState,
-    initialPresistedValue => {
-      if (typeof window !== 'undefined') {
-        const stored = localStorage.getItem('inventoryHistory');
-        return stored ? JSON.parse(stored) : initialPresistedValue;
-      }
-      return initialPresistedValue;
-    }
+    initialHistoryState
   );
   useEffect(() => {
-    localStorage.setItem('inventoryHistory', JSON.stringify(state));
+    const stored = localStorage.getItem('inventoryHistory');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      dispatchInventoryItems({
+        type: 'hydrate',
+        state: {
+          history: parsed.history || initialHistoryState.history,
+          isReady: true,
+        },
+      });
+
+      return;
+    }
+    dispatchInventoryItems({
+      type: 'hydrate',
+      state: {
+        ...initialHistoryState,
+        isReady: true,
+      },
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!state.isReady) return;
+    localStorage.setItem(
+      'inventoryHistory',
+      JSON.stringify({
+        history: state.history,
+      })
+    );
   }, [state]);
   return (
     <InventoryContext value={state}>
@@ -161,5 +194,8 @@ export function createNewHistoryEntry(
     isActive: true,
     action,
   };
-  return { history: [...inactiveHistory, newEntry] };
+  return {
+    ...state,
+    history: [...inactiveHistory, newEntry],
+  };
 }
